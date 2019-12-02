@@ -7,17 +7,26 @@ registrySecret: regsecret
 
 pvc:
   #If not specified will default to oci
-  storageClassName: "oci"
+  # storageClassName: "oci"
   #Check the availability domain on your OCI tenant
-  ociAD: "US-ASHBURN-AD-2"
+  # ociAD: "US-ASHBURN-AD-2"
   accessModes: ReadWriteOnce
   #Minimum size on OCI is 50Gi, if set smaller the deployment will fail
   storageSize: 50Gi
 
+## Expose the grafana service to be accessed from outside the cluster (LoadBalancer service).
+## or access it from within the cluster (ClusterIP service). Set the service type and the port to serve it.
+## ref: http://kubernetes.io/docs/user-guide/services/
+##
 service:
-  #Type can be: ClusterIP, NodePort, LoadBalancer
-  type: LoadBalancer
+  type: ClusterIP
   port: 1521
+  targetPort: 1521
+    # targetPort: 4181 To be used with a proxy extraContainer
+  annotations: {}
+  labels: {}
+  portName: seqnet
+
 
 replicaCount: 1
 

@@ -8,12 +8,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
-  storageClassName: "{{ .Values.pvc.storageClassName }}"
-  selector:
-    matchLabels:
-      oci-availability-domain: "{{ .Values.pvc.ociAD }}"
+  storageClassName: {{ .Values.pvc.storageClassName }}
   accessModes:
     - {{ .Values.pvc.accessModes }}
   resources:
     requests:
-      storage: {{ .Values.pvc.storageSize }}
+      storage: {{ .Values.pvc.storageSize | quote }}
