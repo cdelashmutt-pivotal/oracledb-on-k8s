@@ -19,7 +19,7 @@ pvc:
 ## ref: http://kubernetes.io/docs/user-guide/services/
 ##
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 1521
   targetPort: 1521
     # targetPort: 4181 To be used with a proxy extraContainer
@@ -31,17 +31,12 @@ service:
 replicaCount: 1
 
 image:
-  repository: store/oracle/database-enterprise
-  tag: 12.2.0.1
+  repository: oracle/database
+  tag: 18.4.0-xe
   pullPolicy: IfNotPresent
-  containerMemory: 3Gi
-  hostPort: 1521
   containerPort: 1521
-  dbSid: ORCL
-  dbPdb: PDB1
   dbPassword: Welcome1#
-  dbDomain: local
-  dbMemory: 2Gi
+  dbSid: XE
 
 ingress:
   enabled: false
@@ -56,17 +51,10 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #  cpu: 100m
-  #  memory: 128Mi
-  # requests:
-  #  cpu: 100m
-  #  memory: 128Mi
+resources: 
+  requests:
+    cpu: 0.8
+    memory: 800Mi
 
 nodeSelector: {}
 

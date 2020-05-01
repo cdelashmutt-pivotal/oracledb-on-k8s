@@ -30,39 +30,27 @@ spec:
           medium: Memory
       - name: database-storage
         persistentVolumeClaim:
-          claimName: {{ template "oracledb.fullname" . }}
+          claimName: {{ .Values.pvc.existingClaim | default (include "oracledb.fullname" .) }}
       containers:
         - name: {{ .Chart.Name }}
-          command:
-            - /home/oracle/setup/dockerInit.sh
+#          command:
+#            - /home/oracle/setup/dockerInit.sh
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          resources:
-            requests:
-              memory: {{ .Values.image.containerMemory }}
           ports:
             - name: sqlnet
               containerPort: {{ .Values.image.containerPort }}
-              hostPort: {{ .Values.image.hostPort }}
               protocol: TCP
           volumeMounts:
             - mountPath: /dev/shm
               name: dshm
-            - mountPath: /ORCL #This is the directory inside the container
+            - mountPath: /opt/oracle/oradata #This is the directory inside the container
               name: database-storage
           env:
-            - name: DB_SID
-              value: {{ .Values.image.dbSid }}
-            - name: DB_PDB
-              value: {{ .Values.image.dbPdb }}
-            - name: DB_PASSWD
+            - name: ORACLE_PWD
               value: {{ .Values.image.dbPassword }}
-            - name: DB_DOMAIN
-              value: {{ .Values.image.dbDomain }}
-            - name: DB_MEMORY
-              value: {{ .Values.image.dbMemory }}
-            - name: DB_BUNDLE
-              value: basic
+            - name: ORACLE_SID
+              value: {{ .Values.image.dbSid }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
