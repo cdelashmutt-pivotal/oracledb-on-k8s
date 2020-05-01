@@ -35,7 +35,7 @@ image:
   tag: 18.4.0-xe
   pullPolicy: IfNotPresent
   containerPort: 1521
-  dbPassword: Welcome1#
+#  dbPassword: Welcome1#
   dbSid: XE
 
 ingress:

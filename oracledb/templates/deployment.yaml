@@ -46,9 +46,18 @@ spec:
               name: dshm
             - mountPath: /opt/oracle/oradata #This is the directory inside the container
               name: database-storage
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - "/opt/oracle/checkDBStatus.sh"
           env:
             - name: ORACLE_PWD
-              value: {{ .Values.image.dbPassword }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "oracledb.name" . }}
+                  key: oracledb-system-password
             - name: ORACLE_SID
               value: {{ .Values.image.dbSid }}
           resources:
